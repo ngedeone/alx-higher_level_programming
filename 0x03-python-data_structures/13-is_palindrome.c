@@ -1,51 +1,72 @@
-#include <stddef.h>
+#include "lists.h"
+
+listint_t *reverse_listint(listint_t **head);
+int is_palindrome(listint_t **head);
 
 /**
- * Definition for singly-linked list.
- * struct listint_s {
- *     int n;
- *     struct listint_s *next;
- * };
- * typedef struct listint_s listint_t;
+ * reverse_listint - Reverses a singly-linked listint_t list.
+ * @head: A pointer to the starting node of the list to reverse.
+ *
+ * Return: A pointer to the head of the reversed list.
  */
+listint_t *reverse_listint(listint_t **head)
+{
+	listint_t *node = *head, *next, *prev = NULL;
 
-int is_palindrome(listint_t **head) {
-    if (*head == NULL || (*head)->next == NULL) {
-        return 1;  /* Empty list or a list with one element is considered a palindrome*/
-    }
-    
-    listint_t *slow = *head;
-    listint_t *fast = *head;
-    
-    while (fast != NULL && fast->next != NULL) {
-        slow = slow->next;
-        fast = fast->next->next;
-    }
-    
-    /* Reverse the second half of the list*/
-    listint_t *prev = NULL;
-    listint_t *current = slow;
-    listint_t *next = NULL;
-    
-    while (current != NULL) {
-        next = current->next;
-        current->next = prev;
-        prev = current;
-        current = next;
-    }
-    
-    /* Compare the first half and reversed second half*/
-    listint_t *first = *head;
-    listint_t *second = prev;
-    
-    while (second != NULL) {
-        if (first->n != second->n) {
-            return 0;  /* Not a palindrome*/
-        }
-        first = first->next;
-        second = second->next;
-    }
-    
-    return 1;  /* It is a palindrome*/
+	while (node)
+	{
+		next = node->next;
+		node->next = prev;
+		prev = node;
+		node = next;
+	}
+
+	*head = prev;
+	return (*head);
 }
 
+/**
+ * is_palindrome - Checks if a singly linked list is a palindrome.
+ * @head: A pointer to the head of the linked list.
+ *
+ * Return: If the linked list is not a palindrome - 0.
+ *         If the linked list is a palindrome - 1.
+ */
+int is_palindrome(listint_t **head)
+{
+	listint_t *tmp, *rev, *mid;
+	size_t size = 0, i;
+
+	if (*head == NULL || (*head)->next == NULL)
+		return (1);
+
+	tmp = *head;
+	while (tmp)
+	{
+		size++;
+		tmp = tmp->next;
+	}
+
+	tmp = *head;
+	for (i = 0; i < (size / 2) - 1; i++)
+		tmp = tmp->next;
+
+	if ((size % 2) == 0 && tmp->n != tmp->next->n)
+		return (0);
+
+	tmp = tmp->next->next;
+	rev = reverse_listint(&tmp);
+	mid = rev;
+
+	tmp = *head;
+	while (rev)
+	{
+		if (tmp->n != rev->n)
+			return (0);
+		tmp = tmp->next;
+		rev = rev->next;
+	}
+	reverse_listint(&mid);
+
+	return (1);
+}
