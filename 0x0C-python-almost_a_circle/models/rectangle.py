@@ -7,7 +7,7 @@ from models.base import Base
 
 class Rectangle(Base):
     def __init__(self, width, height, x=0, y=0, id=None):
-        super().__init__(id)  # Call the constructor of the Base class
+        super().__init__(id)
         self.width = width
         self.height = height
         self.x = x
@@ -20,9 +20,9 @@ class Rectangle(Base):
     @width.setter
     def width(self, value):
         if not isinstance(value, int):
-            raise TypeError("Width must be an integer")
+            raise TypeError("width must be an integer")
         if value <= 0:
-            raise ValueError("Width must be > 0")
+            raise ValueError("width must be > 0")
         self.__width = value
 
     @property
@@ -32,9 +32,9 @@ class Rectangle(Base):
     @height.setter
     def height(self, value):
         if not isinstance(value, int):
-            raise TypeError("Height must be an integer")
+            raise TypeError("height must be an integer")
         if value <= 0:
-            raise ValueError("Height must be > 0")
+            raise ValueError("height must be > 0")
         self.__height = value
 
     @property
@@ -44,9 +44,9 @@ class Rectangle(Base):
     @x.setter
     def x(self, value):
         if not isinstance(value, int):
-            raise TypeError("X must be an integer")
+            raise TypeError("x must be an integer")
         if value < 0:
-            raise ValueError("X must be >= 0")
+            raise ValueError("x must be >= 0")
         self.__x = value
 
     @property
@@ -56,7 +56,41 @@ class Rectangle(Base):
     @y.setter
     def y(self, value):
         if not isinstance(value, int):
-            raise TypeError("Y must be an integer")
+            raise TypeError("y must be an integer")
         if value < 0:
-            raise ValueError("Y must be >= 0")
+            raise ValueError("y must be >= 0")
         self.__y = value
+
+    def area(self):
+        """Calculate and return the area of the rectangle."""
+        return self.__width * self.__height
+
+    def display(self):
+        """Display the rectangle using '#'
+        characters, considering x and y coordinates."""
+        for _ in range(self.__y):
+            print()
+        for _ in range(self.__height):
+            print(" " * self.__x + "#" * self.__width)
+
+    def __str__(self):
+        """Return a string representation of the Rectangle instance."""
+        return f"[Rectangle] ({self.id}) {self.__x}/{self.__y} - " \
+            f"{self.__width}/{self.__height}"
+
+    def update(self, *args, **kwargs):
+        """Update attributes using keyword arguments."""
+        if args:
+            if len(args) >= 1:
+                self.id = args[0]
+            if len(args) >= 2:
+                self.width = args[1]
+            if len(args) >= 3:
+                self.height = args[2]
+            if len(args) >= 4:
+                self.x = args[3]
+            if len(args) >= 5:
+                self.y = args[4]
+        else:
+            for key, value in kwargs.items():
+                setattr(self, key, value)
